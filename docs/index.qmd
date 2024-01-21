@@ -1,0 +1,23 @@
+---
+title: "My project"
+format: html
+editor: visual
+---
+
+# Description
+
+REASON FOR CHOOSING THE DATA
+
+I chose the data about the composition of solid waste because the issue of solid waste management is a pressing challenge faced by the entire world.
+
+As the global population continues to urbanize and consumption patterns shift, the generation of solid waste is expected to increase and understanding the composition is a crucial first step in handling the issue.
+
+```{r}
+library(tidyverse)
+```
+
+# Import
+
+```{r}
+readxl::read_excel(path = "/cloud/project/data/raw/Dominic.xlsx")
+```
