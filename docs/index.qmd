@@ -19,5 +19,5 @@ library(tidyverse)
 # Import
 
 ```{r}
-readxl::read_excel(path = "/cloud/project/data/raw/Dominic.xlsx")
+readxl::read_excel(path = here::here("data/raw/Dominic.xlsx"))
 ```
