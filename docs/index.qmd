@@ -21,3 +21,30 @@ library(tidyverse)
 ```{r}
 readxl::read_excel(path = here::here("data/raw/Dominic.xlsx"))
 ```
+
+```{r}
+Dominic <- readxl::read_xlsx(path = "/cloud/project/data/raw/Dominic.xlsx")
+```
+
+```{r}
+dominic_processed <- Dominic |> 
+  select(iso3c:composition_plastic_percent) |> 
+  rename(region = region_id,
+         country = country_name,
+         population = population_population_number_of_people,
+         food_organic_waste = composition_food_organic_waste_percent,
+         glass = composition_glass_percent,
+         metal = composition_metal_percent,
+         other = composition_other_percent,
+         paper_cardboard = composition_paper_cardboard_percent,
+         plastic = composition_plastic_percent) |> 
+   filter(food_organic_waste != "NA",
+         glass != "NA",
+         metal != "NA",
+         other != "NA",
+         paper_cardboard != "NA",
+         plastic != "NA")
+
+write_csv(dominic_processed, file = "/cloud/project/data/processed/dominic_processed.csv")
+
+```
