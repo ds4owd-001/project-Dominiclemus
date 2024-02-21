@@ -2,6 +2,9 @@
 title: "My project"
 format: html
 editor: visual
+toc: true
+message: false
+warning: false
 ---
 
 # Description
@@ -14,6 +17,7 @@ As the global population continues to urbanize and consumption patterns shift, t
 
 ```{r}
 library(tidyverse)
+library(dplyr)
 ```
 
 # Import
@@ -27,7 +31,7 @@ Dominic <- readxl::read_xlsx(path = "/cloud/project/data/raw/Dominic.xlsx")
 ```
 
 ```{r}
-dominic_processed <- Dominic |> 
+dominic_processed_1 <- Dominic |> 
   select(iso3c:composition_plastic_percent) |> 
   rename(region = region_id,
          country = country_name,
@@ -44,6 +48,14 @@ dominic_processed <- Dominic |>
          other != "NA",
          paper_cardboard != "NA",
          plastic != "NA")
+
+dominic_processed <- dominic_processed_1 |> 
+  mutate(food_organic_waste = as.numeric(food_organic_waste),
+         glass = as.numeric(glass),
+         metal = as.numeric(metal),
+         other = as.numeric(other),
+         paper_cardboard = as.numeric(paper_cardboard),
+         plastic = as.numeric(plastic))
 
 write_csv(dominic_processed, file = "/cloud/project/data/processed/dominic_processed.csv")
 

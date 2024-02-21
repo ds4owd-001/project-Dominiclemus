@@ -1,1 +1,10 @@
 variable_name,description
+iso3c,country code
+income_id,income status of the country
+gdp, gross domestic product of the country
+food_organic_waste,percentage of the proportion of food organic waste 
+glass,percentage of the proportion of glass waste 
+metal,percentage of the proportion of metal waste 
+other,percentage of the other proportion of waste whose data is available
+paper_cardboard,percentage of the proportion of paper and cardboard waste
+plastic,percentage of the proportion of plastic waste 

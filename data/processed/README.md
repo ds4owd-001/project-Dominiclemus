@@ -2,16 +2,16 @@
 
 ## General information
 
-1.  Title of Dataset:  
+1.  Title of Dataset:  SOLID WASTE GENERATION
 
 2.  Author Information
 
 **Author A**
 
-- First name:
-- Surname:
-- ORCID iD
-- Email:
+- First name: Dominic
+- Surname: Bagumaho
+- ORCID iD: 0009-0009-5814-1387
+- Email:Bagumahodominiclemus7@gmail
 
 **Author B**
 
@@ -22,15 +22,15 @@
 
 etc.
 
-3.  Date of data collection (single date, range, approximate date):
+3.  Date of data collection (single date, range, approximate date):2023-12-23
 
-4.  Geographic location of data collection:
+4.  Geographic location of data collection: Uganda
 
 5.  Information about funding sources that supported the collection of the data: 
 
 ## Sharing / access information
 
-1.  Licenses/restrictions placed on the data:  
+1.  Licenses/restrictions placed on the data:  No restrictions
 
 Recommended: This work is licensed under the Creative Commons Attribution 4.0 International license (CC-BY-4.0).
 

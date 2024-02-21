@@ -1,0 +1,238 @@
+---
+title: "SOLID WASTE GENERATION"
+subtitle: "A comparative analysis of solid waste generation across nations"
+date: today
+format: html
+toc: true
+code-fold: true
+message: false
+warning: false
+editor: visual
+author: 
+      - name: Bagumaho Dominic
+        orcid: 0009-0009-5814-1387
+        email: Bagumahodominiclemus7@gmail
+        affiliation:
+          - name: Makerere University
+            url: https://www.mak.ac.ug
+---
+
+## Introduction
+
+The management of solid waste presents a pressing global challenge amidst rapid population growth and urbanization affecting every single person in the world.
+
+This report offers a rather quick examination of solid waste generation, encompassing variables such as region, income level, population, GDP, and proportions of waste for the selected countries.
+
+By examining the trends, we aim to provide insights for better waste management policies and practices, contributing to global efforts for environmental sustainability.
+
+## Methods
+
+The data utilized in this report was obtained from a variety of sources, including international organizations, and academic research databases. Data on solid waste generation, population, and GDP for the selected countries were collected from reputable statistical databases such as the World Bank and the United Nations.
+
+Additionally, information on regional classifications and income levels was sourced from recognized institutions like the World Economic Forum and the International Monetary Fund. All data were carefully curated and cross-referenced to ensure accuracy and reliability in our analysis of solid waste generation trends and patterns.
+
+Many of the lower-income cities and countries have data on waste composition which is more than 10 years old and may not adequately reflect current consumption patterns, for example, consumption of plastic packaging and electronic equipment(Comparative analysis). This presents a big challene in the data analysis field
+
+## Results
+
+During analysis, it revealed significant variations in solid waste generation across different regions and income levels. Some of the comparisons are represented below.
+
+```{r,echo=FALSE,results='hide'}
+library(tidyverse)
+library(dplyr)
+library(gt)
+library(gtsummary)
+library(knitr)
+library(ggthemes)
+library(readxl)
+```
+
+```{r,echo=FALSE,results='hide'}
+readxl::read_excel(path = here::here("data/raw/Dominic.xlsx"))
+```
+
+```{r,echo=FALSE,results='hide'}
+Dominic <- readxl::read_xlsx(path = "/cloud/project/data/raw/Dominic.xlsx")
+```
+
+```{r,echo=FALSE,results='hide'}
+
+dominic_processed_1 <- Dominic |> 
+  select(iso3c:composition_plastic_percent) |> 
+  rename(region = region_id,
+         country = country_name,
+         population = population_population_number_of_people,
+         food_organic_waste = composition_food_organic_waste_percent,
+         glass = composition_glass_percent,
+         metal = composition_metal_percent,
+         other = composition_other_percent,
+         paper_cardboard = composition_paper_cardboard_percent,
+         plastic = composition_plastic_percent) |> 
+   filter(food_organic_waste != "NA",
+         glass != "NA",
+         metal != "NA",
+         other != "NA",
+         paper_cardboard != "NA",
+         plastic != "NA")
+```
+
+```{r,echo=FALSE,results='hide'}
+dominic_processed <- dominic_processed_1 |> 
+  mutate(food_organic_waste = as.numeric(food_organic_waste),
+         glass = as.numeric(glass),
+         metal = as.numeric(metal),
+         other = as.numeric(other),
+         paper_cardboard = as.numeric(paper_cardboard),
+         plastic = as.numeric(plastic))
+```
+
+```{r,echo=FALSE,results='hide'}
+write_csv(dominic_processed, file = "/cloud/project/data/processed/dominic_processed.csv")
+```
+
+```{r}
+summarised_on_income <- dominic_processed |> 
+  group_by(income_id) |> 
+  summarize(mean_food_organic_waste = mean(food_organic_waste),
+            mean_glass = mean(glass),
+            mean_metal = mean(metal),
+            mean_other = mean(other),
+            mean_paper_cardboard = mean(paper_cardboard),
+            mean_plastic = mean(plastic),
+            .groups = "drop")
+```
+
+```{r}
+pivoted_summarised_on_income <- summarised_on_income |> 
+  pivot_longer(cols = mean_food_organic_waste : mean_plastic,
+               names_to = "waste_category",
+               values_to = "average_values")
+
+```
+
+```{r}
+#| fig-cap: Relationship between solid waste generation and income level
+#| label: fig-income-waste
+
+income_levels <- c("LIC", "LMC", "UMC", "HIC")
+pivoted_summarised_on_income$income_id <- factor(pivoted_summarised_on_income$income_id, levels = income_levels)
+  
+ggplot(data = pivoted_summarised_on_income,
+       mapping = aes(x = income_id,
+                     y = average_values,
+                     fill = waste_category)) +
+  geom_col() +
+  labs(title = "Solid waste generation based on income levels",
+       x = "Income Level", y = "Average Waste Generation") +
+  theme_minimal()
+```
+
+Through [@fig-income-waste], one can observe the relationship between income level and average solid waste generation. The data suggests that as income level rises, there is an accompanying decrease in the average amount of solid waste generated. This is potentially due to higher investments in the barriers to solid waste generation through better policies and innovation financing. This reduces the amount of disposable goods among individuals with higher incomes.
+
+Solid waste generation and composition varies differently according to income level (as shown in @fig-income-waste), region, urbanization levels, industrial activities, cultural practices, and lifestyle patterns. Additionally, climate and geographic features can influence waste composition and generation rates, with coastal areas or tourist destinations often experiencing unique waste challenges.
+
+The regional variation shown in @tbl-region-waste can give a better view of differences and bring a view of the challenges that may be met in the process of solid waste management if such variations are not catered for.
+
+```{r}
+#| tbl-cap: Regional variation in solid waste generation
+#| label: tbl-region-waste
+ 
+waste_table <- dominic_processed |> 
+  group_by(region) |> 
+  summarise(count = n(),
+            mean_food_organic_waste = mean(food_organic_waste),
+            mean_glass = mean(glass),
+            mean_metal = mean(metal),
+            mean_other = mean(other),
+            mean_paper_cardboard = mean(paper_cardboard),
+            mean_plastic = mean(plastic))
+ waste_table |> 
+  gt() |> 
+  tab_header(title = "Average solid waste generation for different regions") |> 
+  fmt_number(columns = c(region:mean_plastic),
+                         decimals = 1)
+```
+
+In the @fig-region-waste, a regional variation of average solid waste generation is presented for the different regions.
+
+```{r}
+#| fig-cap: Solid waste generation and composition for the different regions
+#| label: fig-region-waste
+
+summarised_on_region <- dominic_processed |> 
+  group_by(region) |> 
+  summarize(mean_food_organic_waste = mean(food_organic_waste),
+            mean_glass = mean(glass),
+            mean_metal = mean(metal),
+            mean_other = mean(other),
+            mean_paper_cardboard = mean(paper_cardboard),
+            mean_plastic = mean(plastic),
+            .groups = "drop") |> 
+  
+  pivot_longer(cols = mean_food_organic_waste : mean_plastic,
+               names_to = "waste_category",
+               values_to = "average_values")
+  
+ggplot(data = summarised_on_region,
+         mapping = aes(x="",
+                       y = average_values,
+                       fill = waste_category)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar(theta = "y") +
+  theme_void() +
+  scale_color_colorblind() +
+  facet_wrap(~region)
+  
+```
+
+The @fig-region-waste illustrates the distribution of solid waste generation across different regions. By visualizing the proportion of waste generated by each region, we can discern regional disparities and prioritize targeted waste management strategies to address environmental concerns effectively. This regional differences form a basis for policy making aligning it towards more region-specific waste management solutions.
+
+The summary statistics for Sub-Saharan Africa are shown in the @tbl-mean-SSF and @tbl-sd-SSF below
+
+```{r}
+#| tbl-cap: Mean values for the solid waste generation in Sub-Saharan Africa
+#| label: tbl-mean-SSF
+mean_SSF <- dominic_processed |> 
+  filter(region == "SSF") |> 
+  summarize(count = n(),
+            food_organic_waste = mean(food_organic_waste),
+            glass = mean(glass),
+            metal = mean(metal),
+            other = mean(other),
+            paper_cardboard = mean(paper_cardboard),
+            plastic = mean(plastic))
+mean_SSF |> 
+  gt() |> 
+  tab_header(title = "Africa's average solid waste composition") |> 
+  fmt_number(columns = c(count:plastic),
+                         decimals = 1)
+```
+
+```{r}
+#| tbl-cap: Standard deviation for the solid waste generation in Sub-Saharan Africa
+#| label: tbl-sd-SSF
+sd_SSF <- dominic_processed |> 
+  filter(region == "SSF") |> 
+  summarize(count = n(),
+            food_organic_waste = sd(food_organic_waste),
+            glass = sd(glass),
+            metal = sd(metal),
+            other = sd(other),
+            paper_cardboard = sd(paper_cardboard),
+            plastic = sd(plastic))
+sd_SSF |> 
+  gt() |> 
+  tab_header(title = "Africa's deviation in solid waste composition") |> 
+  fmt_number(columns = c(food_organic_waste:plastic),
+                         decimals = 1)
+```
+
+With the spatial-temporal variations and expexted increases in solid waste generation, its management requires all relevant stake holders to be on board from producers to consumers and all the institutions(Global waste management outlook).
+
+## Conclusions
+
+Understanding the proportions of different types of waste within the overall waste stream is crucial for developing targeted interventions. By identifying the dominant waste categories, resources can be effectively allocated to implement waste management strategies that prioritize the most significant contributors to the waste stream.
+
+Effective management of solid waste is imperative to mitigate environmental pollution, conserve natural resources, and promote circular economy principles. Implementing integrated waste management systems, emphasizing recycling and composting, and fostering partnerships between government, industry, and communities are essential for achieving sustainable waste management practices and safeguarding the health and well-being of current and future generations.
+
+## References
