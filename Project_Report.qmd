@@ -15,6 +15,8 @@ author:
         affiliation:
           - name: Makerere University
             url: https://www.mak.ac.ug
+bibliography: references.bib
+csl: apa.csl
 ---
 
 ## Introduction
@@ -31,7 +33,7 @@ The data utilized in this report was obtained from a variety of sources, includi
 
 Additionally, information on regional classifications and income levels was sourced from recognized institutions like the World Economic Forum and the International Monetary Fund. All data were carefully curated and cross-referenced to ensure accuracy and reliability in our analysis of solid waste generation trends and patterns.
 
-Many of the lower-income cities and countries have data on waste composition which is more than 10 years old and may not adequately reflect current consumption patterns, for example, consumption of plastic packaging and electronic equipment(Comparative analysis). This presents a big challene in the data analysis field
+Many of the lower-income cities and countries have data on waste composition which is more than 10 years old and may not adequately reflect current consumption patterns, for example, consumption of plastic packaging and electronic equipment [@david_2012]. This presents a big challenge in the data analysis field
 
 ## Results
 
@@ -227,7 +229,7 @@ sd_SSF |>
                          decimals = 1)
 ```
 
-With the spatial-temporal variations and expexted increases in solid waste generation, its management requires all relevant stake holders to be on board from producers to consumers and all the institutions(Global waste management outlook).
+With the spatial-temporal variations and expected increases[@WAW_2018] in solid waste generation, its management requires all relevant stake holders to be on board from producers to consumers and all the institutions[@GWMO_2015].
 
 ## Conclusions
 
